@@ -1,0 +1,39 @@
+body {
+    background: white;
+    height: auto;
+}
+
+aside {
+    float: center;
+    background: #181818;
+    padding: 2%;
+    height: 15%;
+    color: #fff;
+}
+
+aside img{
+    width: 50px;
+    float: left;
+}
+
+aside .logo{
+    font-size: 30px;
+    margin-left: 10px;
+    font-weight: bold;
+    position: relative;
+    top: -3px;
+}
+
+div{
+    float: left;
+}
+
+table {
+    border-collapse: collapse;
+    float: right;
+    margin-right: 20px;
+    width: 450px;
+}
+
+td {border: 2px solid #009542;}
+
