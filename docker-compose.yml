@@ -5,11 +5,13 @@ services:
     image: my_web:1.0
     container_name: web
     command: python3 manage.py runserver 0.0.0.0:8080
+    env_file:
+      - .env
     ports:
       - "8080:8080"
     volumes:
       - ./orders_website:/usr/src/orders_website
-    depends_on: 
+    depends_on:
       - db
     networks:
       - my_network
@@ -19,21 +21,23 @@ services:
     command: python3 single/scripts/single/orders_details_script.py
     volumes:
       - ./orders_website:/usr/src/orders_website
-    depends_on: 
+    environment:
+      - PYTHONPATH=/usr/src/orders_website
+    env_file:
+      - .env
+    depends_on:
       - db
       - web
     networks:
       - my_network
-      
+
   db:
     image: postgres:15.2-alpine
     container_name: db
     volumes:
       - ./pgdb:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_PASSWORD=123321
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=orders_db
+    env_file:
+      - .env
     ports:
       - "5432:5432"
     networks:

@@ -2,11 +2,27 @@ import json
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+GOOGLE_API_KEY_JSON_NAME = os.getenv('GOOGLE_API_KEY_JSON_NAME')
+UPDATE_PERIOD = os.getenv('UPDATE_PERIOD')
+
+TELEGRAM_BOT_ID = os.getenv('TELEGRAM_BOT_ID')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+
+POSTGRES_DB = os.getenv('DB_NAME')
+POSTGRES_USER = os.getenv('DB_USER')
+POSTGRES_PASSWORD = os.getenv('DB_PASSWORD')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "foo"
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -66,11 +82,11 @@ WSGI_APPLICATION = 'orders_website.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": config["DB_NAME"],
-        "USER": config["DB_USER"],
-        "PASSWORD": config["DB_PASSWORD"],
-        "HOST": config["DB_HOST"],
-        "PORT": config["DB_PORT"]
+        "NAME": POSTGRES_DB,
+        "USER": POSTGRES_USER,
+        "PASSWORD": POSTGRES_PASSWORD,
+        "HOST": DB_HOST,
+        "PORT": DB_PORT
     }
 }
 
@@ -110,6 +126,12 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = []
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'my_cache'),
+    }
+}
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

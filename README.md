@@ -1,62 +1,46 @@
-Коротко о проекте:
+# Project Overview
 
-- Это мой любительский проект, который позволяет получать данные из google sheets, производить 
-необходимые преобразования с данными и загрузить их в postgreSQL.
+This is a personal project that allows you to fetch data from Google Sheets, perform necessary data transformations, and load them into PostgreSQL. The project includes a one-page website built using Django. Additionally, there is an optional feature for sending notifications via Telegram bot.
 
-- Для этого проекта был создан одностраничный сайт, написанный на Django.
+The entire project is dockerized and ready to be deployed.
 
-- При желании можно настройки рассылку сообщений в телеграм боте.
+# Setup and Launch
 
-- Весь проект готов к развертке через docker.
+1. Unzip the pgdb archive in the current directory (without creating an additional folder with the archive name!).
 
-Настройка и запуск:
-1) необходимо распоковать архив pgdb в данной директории(без создания доп. папки с именем архива!)
-2) в директории 'orders_website' находиться файл "configuration.json". Для работы проекта
-необходимо прописать обязательные настройки.
+2. Specify the settings in the ".env" file located in the project's root directory. The mandatory settings are:
+   - `GOOGLE_API_KEY_JSON_NAME`: Place the Google API KEY file in JSON format in the current directory (orders_website) and pass the file name as a value to this key. Instructions for obtaining the Google API Key can be found in open sources, for example, https://habr.com/ru/post/483302/.
+   - `UPDATE_PERIOD`: The period for updating data from Google Sheets, specified in seconds.
 
-Обязательные:
- - "GOOGLE_API_KEY_JSON_NAME" - в текущую директорию(orders_website) необходимо разместить 
-файл с Google API KEY в формате JSON. Название файла необходимо передать как значение к
-данному ключу. Инструкция по получению google api key можно найти в открытых источниках, например 
-https://habr.com/ru/post/483302/;
- - "UPDATE_PERIOD" = период обновленния данных из google sheets, указанный в секундах.
+### Optional settings:
 
-Необязательные:
+To enable notifications in the Telegram bot (in this example, notifications are sent for orders that have missed their delivery deadline), you need to create a Telegram bot. To do this, go to Telegram and follow the instructions for creating a bot provided by @BotFather. After creating a bot, go to the bot and click \start. Then, go to the Telegram bot @userinfobot to get your chat ID.
 
-Для подключения рассылки в telegram bot (в данном примере идет рассылка данных о заказах, 
-которые просрочили доставку) необходимо создать telegram бота. Для этого в telegram необходимо
-обратиться к боту @BotFather и следовать инструкции по созданию бота. На выходе Вы получите 
-API token. После необходимо перейти к созданному боту и нажать \start. 
+- `TELEGRAM_BOT_ID`: Specify the API token for your bot.
+- `TELEGRAM_CHAT_ID`: Specify your chat ID.
+- 
+### System settings:
 
-Далее необходимо обратиться telegram боту @userinfobot и получить у него ID своего чата.
+These settings are necessary for the operation of the application and the script for collecting and sending data to the Telegram bot. Please do not modify them unless necessary!
 
- - "TELEGRAM_BOT_ID" - указать полученный API token вашего бота;
- - "TELEGRAM_CHAT_ID" - указать полученный ID своего чата.
+- `POSTGRES_DB`: The name of the database.
+- `POSTGRES_USER`: The database user's login.
+- `POSTGRES_PASSWORD`: The database user's password.
+- `DB_HOST`: The database host.
+- `DB_PORT`: The database port.
 
-Системные:
+After specifying the required settings, launch the containers using the following Docker command:
+`docker compose up`
 
-Эти настройки необходимы для работы приложения и скрипта по сбору и рассылке данных в tg. 
-Пожалуста, не изменяйте их без необходимости!
- - "DB_NAME" - имя базы данных;
- - "DB_USER" - логин юзера БД;
- - "DB_PASSWORD"- пароль юзера БД;
- - "DB_HOST" - host БД;
- - "DB_PORT"- port БД.
+The containers are now deployed and ready to use!
 
-3) После указания обязательных настроек необходимо выполнить развертку в docker командой:
+To access the website, use the following URL:
+http://localhost:8080/
 
-- docker compose up
+You should now see a chart showing the price vs order number, a table with data obtained from Google Sheets, and a column showing the calculated price in Russian rubles.
 
-Ваши контейнеры развернуты и готовы к работе!
+## Additional Notes
 
-Чтобы подключиться к сайту используйте http://localhost:8080/
+The `orders_details_script.py` script in the `~\orders_website\single\scripts\single` directory is responsible for working with Google Sheets, processing and transporting data to the database, and sending notifications via the Telegram bot.
 
-Вы должны увидеть график зависимости цены от его номера заказа и таблицу со значениями, 
-полученными из google sheets + колонку с расчитанной ценой в рублях.
-
-P.S.
-
-За работу с google sheets, обработку и транспортировку данных в БД, рассылку в tg боте 
-отвечает скрипт orders_details_script.py, находящийся в директории ~\rders_website\single\scripts\single
-
-Скрипт по работе tg бота вынесена в отдельный файл notification_to_telegram.py в той же директории.
+The script for the Telegram bot is located in the same directory and is named `notification_to_telegram.py`.
